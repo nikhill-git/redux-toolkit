@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+active:scale-95 transition text-xl cursor-pointer bg-red-500 py-1 px-2 rounded
+.active {
+    scale: 95;
+    transition: all;
+    font-size: x-large;
+    background-color: lightgreen;
+    padding: 8px 4px;
+}
+
+.active:hover{
+    cursor: pointer;
+}
+
+.notActive {
+    scale: 95;
+    transition: all;
+    font-size: x-large;
+    background-color: lightcoral;
+    padding: 8px 4px;
+}
+
+.notActive:hover{
+    cursor: pointer;
+}

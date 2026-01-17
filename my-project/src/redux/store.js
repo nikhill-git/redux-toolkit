@@ -9,6 +9,7 @@ import videoCart from "./features/videoCart"
 import gifCart from './features/gifCart'
 import activeTabCart from "./features/activetabCart"
 import cacheResultsSlice from  "./features/cacheResultsSlice"
+import isSignUpSlcie from "./features/isSignUpSlice"
 
 const appStore = configureStore({
     reducer:{
@@ -22,6 +23,7 @@ const appStore = configureStore({
         gifsCart : gifCart,
         activeTabCart: activeTabCart,
         cacheResult : cacheResultsSlice,
+        isSignUp: isSignUpSlcie,
     }
 })
 

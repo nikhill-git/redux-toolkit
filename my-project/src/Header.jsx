@@ -10,33 +10,35 @@ import { clearVideoData } from "./redux/features/videosSlice";
 import { clearGifData } from "./redux/features/gifsSlice";
 import { useNavigate, Link, NavLink } from "react-router-dom";
 import { cacheResults } from "./redux/features/cacheResultsSlice";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./firebase";
 
 const Header = () => {
   const [query, updateQuery] = useState("");
   const [Suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const user = useSelector((store) => store.isSignUp.value);
+  console.log(user)
   const navigate = useNavigate();
 
   const cachedResults = useSelector((store) => store.cacheResult);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-     
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid;
         // ...
-        navigate("/home")
+        navigate("/home");
       } else {
         // User is signed out
         // ...
+        navigate("/");
       }
     });
 
-    return ()=> unsubscribe()
+    return () => unsubscribe();
   }, []);
 
   //fetching all the data
@@ -127,6 +129,16 @@ const Header = () => {
     navigate("/home");
   }
 
+  function handleSignOut() {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  }
+
   function hoverQuery(hquery) {
     //updated the query with the onClicked query from the Suggestions
     clearAllData();
@@ -179,21 +191,30 @@ const Header = () => {
           Media Search
         </h2>
         <div className="flex gap-3">
-          <Link to="/home">
-            <button className="active:scale-95 transition text-xl cursor-pointer bg-red-500 py-1 px-2 rounded">
-              Home
-            </button>
-          </Link>
-          <Link to="/home/collection">
-            <button className="active:scale-95 transition text-xl cursor-pointer bg-red-500 py-1 px-2 rounded">
-              Collection
-            </button>
-          </Link>
-          <Link to='/'>
-            <button className="active:scale-95 transition text-xl cursor-pointer bg-red-500 py-1 px-2 rounded">
-              Sign Out
-            </button>
-          </Link>
+          {user && (
+            <Link to="/home">
+              <button className="active:scale-95 transition text-xl cursor-pointer bg-red-500 py-1 px-2 rounded">
+                Home
+              </button>
+            </Link>
+          )}
+          {user && (
+            <Link to="/home/collection">
+              <button className="active:scale-95 transition text-xl cursor-pointer bg-red-500 py-1 px-2 rounded">
+                Collection
+              </button>
+            </Link>
+          )}
+          {
+            <Link to="/">
+              <button
+                onClick={handleSignOut}
+                className="active:scale-95 transition text-xl cursor-pointer bg-red-500 py-1 px-2 rounded"
+              >
+                Sign Out
+              </button>
+            </Link>
+          }
         </div>
       </div>
 
@@ -202,31 +223,33 @@ const Header = () => {
           className="w-1/2 flex justify-center gap-1 flex-col"
           onSubmit={(e) => e.preventDefault()}
         >
-          <div className=" flex gap-1.5">
-            <input
-              onClick={() => setShowSuggestions(true)}
-              //after two seconds setShowSuggestions become false,
-              //im building a new feature, that
-              //if i click on the suggestions,it show be added to query and fetch the data with that query,
-              // to implement this, here when im clicking on that suggestred query , this onBlur funciton is called and setting the
-              //showSuggestions value to false, so im using a setTime out here for 100 milli seconds
-              onBlur={onBlurFun}
-              type="text"
-              value={query}
-              onChange={(e) => {
-                updateQuery(e.target.value);
-                setShowSuggestions(true);
-              }}
-              className=" font-medium text-xl border-2 w-2/3 px-4 py-2 rounded outline-none text-white"
-              placeholder="Search Anything..."
-            />
-            <button
-              className="active:scale-95 transition cursor-pointer border-2 font-medium text-xl px-4 py-2 rounded outline-none text-white"
-              onClick={() => addQuerytoStore(query)}
-            >
-              Search
-            </button>
-          </div>
+          {user && (
+            <div className=" flex gap-1.5">
+              <input
+                onClick={() => setShowSuggestions(true)}
+                //after two seconds setShowSuggestions become false,
+                //im building a new feature, that
+                //if i click on the suggestions,it show be added to query and fetch the data with that query,
+                // to implement this, here when im clicking on that suggestred query , this onBlur funciton is called and setting the
+                //showSuggestions value to false, so im using a setTime out here for 100 milli seconds
+                onBlur={onBlurFun}
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  updateQuery(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                className=" font-medium text-xl border-2 w-2/3 px-4 py-2 rounded outline-none text-white"
+                placeholder="Search Anything..."
+              />
+              <button
+                className="active:scale-95 transition cursor-pointer border-2 font-medium text-xl px-4 py-2 rounded outline-none text-white"
+                onClick={() => addQuerytoStore(query)}
+              >
+                Search
+              </button>
+            </div>
+          )}
 
           {showSuggestions && Suggestions.length != 0 && (
             <div className=" rounded relative w-2/3 p-3 my-3 bg-black flex flex-col gap-1 ">

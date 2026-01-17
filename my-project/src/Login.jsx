@@ -3,6 +3,8 @@ import { validateData } from "./constants";
 import { auth } from "./firebase";
 import { createUserWithEmailAndPassword, updateProfile , signInWithEmailAndPassword} from "firebase/auth";
 import Header from "./Header";
+import { useDispatch } from "react-redux";
+import { toggleIsSignUp } from "./redux/features/isSignUpSlice";
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(true);
@@ -10,6 +12,7 @@ const Login = () => {
   const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
+  const dispatch = useDispatch()
 
   const validateFormData = () => {
     const data = {
@@ -30,7 +33,9 @@ const Login = () => {
       )
         .then((userCredential) => {
           // Signed up
+          
           const user = userCredential.user;
+          dispatch(toggleIsSignUp(user.email))
           updateProfile(auth.currentUser, {
             displayName: name.current?.value,
             photoURL: "https://example.com/jane-q-user/profile.jpg",

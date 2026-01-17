@@ -8,6 +8,7 @@ import photoCart from "./features/photoCart"
 import videoCart from "./features/videoCart"
 import gifCart from './features/gifCart'
 import activeTabCart from "./features/activetabCart"
+import cacheResultsSlice from  "./features/cacheResultsSlice"
 
 const appStore = configureStore({
     reducer:{
@@ -20,6 +21,7 @@ const appStore = configureStore({
         videosCart : videoCart,
         gifsCart : gifCart,
         activeTabCart: activeTabCart,
+        cacheResult : cacheResultsSlice,
     }
 })
 

@@ -8,33 +8,35 @@ import { BrowserRouter, RouterProvider } from 'react-router-dom'
 import { createBrowserRouter } from 'react-router-dom'
 import FullResCard from './components/FullResCard.jsx'
 import Collection from './pages/Collection.jsx'
-import Body from './Body.jsx'
 import FullResCardCart from './components/FullResCardCart.jsx'
+import Login from './Login.jsx'
+import Body from './Body.jsx'
+
 
 
 const appRouter = createBrowserRouter([
   {
     path:"/",
+    element : <Login/>,
+  },
+  {
+    path : "/home",
     element : <App/>,
     children: [
       {
-        path:"/",
-        element: <Body/>
+        path: "/home",
+        element : <Body/>
       },
       {
-        path:"/home",
-        element: <Body/>
-      },
-      {
-        path:"/fullImage",
+        path:"/home/fullImage",
         element: <FullResCard/>
       },
       {
-        path:"/collection",
+        path:"/home/collection",
         element: <Collection/>
       },
       {
-        path:"/fullImageCart",
+        path:"/home/fullImageCart",
         element: <FullResCardCart/>
       }
     ]
